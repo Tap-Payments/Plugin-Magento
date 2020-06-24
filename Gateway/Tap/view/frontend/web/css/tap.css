@@ -1,0 +1,42 @@
+.payment-method.tap .brands {
+    display: inline;
+    margin-left: 20px;
+}
+
+.payment-method.tap .brands.brandVisa {
+    padding: 0px 25px;
+    background: no-repeat url('../images/visa_master.png');
+    vertical-align: middle;
+    padding: 20px 142px;
+    height: 100px;
+    width: 500px;
+}
+.payment-method.tap .brands.margin {
+   height: 50px !important;
+}
+
+.payment-method.tap .brands.brandMastercard {
+    padding: 5px 20px;
+    background: no-repeat url('../images/mastercard.png');
+}
+.payment-method.tap .brands.brandKnet {
+    padding: 0px 25px;
+    background: no-repeat url('../images/knet.png');
+    height: 24px;
+    max-height: none;
+    vertical-align: middle;
+    padding: 40px 66px;;
+}
+.payment-method.tap .tap-logo {
+    float:right;
+    height: 24px;
+    max-height: none;
+    vertical-align: middle;
+    padding: 15px 0px;
+}
+
+
+
+.tap-address {
+	margin-top: 30px;
+}
