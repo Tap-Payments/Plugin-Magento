@@ -170,8 +170,6 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         $post_url           =   '';
         $redirectUrl        =   $this->urlBuilder->getUrl('tap/Standard/Response');
         $trans_object = [];
-        // var_dump($active_sk);
-        // exit;
         
         $request_url = "https://api.tap.company/v2/charges";
         $trans_object["amount"]                 = $amount;
@@ -223,7 +221,6 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         );
 
         $response = curl_exec($curl);
-        //var_dump($response);exit;
         $response = json_decode($response);
         $err = curl_error($curl);
         curl_close($curl);
