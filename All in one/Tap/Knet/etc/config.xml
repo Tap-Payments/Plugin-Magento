@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <knet>                
+                <model>Tap\Knet\Model\Knet</model>                
+                <title>Knet</title>
+				<currency>KWD</currency>
+                <active>1</active>
+                <order_status>pending</order_status>
+                <transaction_mode>transaction_mode</transaction_mode>
+				<test_public_key>test_public_key</test_public_key>
+                <test_secret_key>test_secret_key</test_secret_key>
+                <live_public_key>live_public_key</live_public_key>
+                <live_secret_key>live_public_key</live_secret_key>
+                <can_use_checkout>1</can_use_checkout> 
+                <post_url>post_url</post_url>
+                <allowspecific>0</allowspecific>
+            </knet>
+        </payment>
+    </default>
+</config>

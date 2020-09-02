@@ -1,0 +1,75 @@
+<div class="payment-method tap" data-bind="css: {'_active': (getCode() == isChecked())}">
+    <div class="payment-method-title field choice">
+        <input type="radio" name="payment[method]" class="radio" data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
+        <label data-bind="attr: {'for': getCode()}" class="label">
+            <span data-bind="text: getTitle()"></span>
+        </label>
+         <!-- <img class="tap-logo" src="https://ecwid.gosell.io/cp/img/tap_payments.png"> -->
+    </div>
+   
+    <div>
+        
+    <div class="payment-method-content">
+        <div>
+            <input type="radio" id="payment_type" name="payment_type" value="CC" data-validate='{"required":true}' label="Credit Card" checked = "checked">Credit Card
+        </div>
+         <div>
+            <input type="radio" id="payment_type" name="payment_type" value="charge_knet" data-validate='{"required":true}' label="KNET" data-bind="visible: getKnetAtCheckout()"><span data-bind="text:getKnet(),visible: getKnetAtCheckout() "></span>
+        </div>
+        <div>
+            <input type="radio" id="payment_type" name="payment_type" value="benefit" data-validate='{"required":true}' label="Benefit" data-bind="visible: getBenefitAtCheckout()"><span data-bind="text:getbenefit(),visible: getBenefitAtCheckout() "></span>
+        </div>
+        <!-- <div>
+            <div>
+                <input type="radio" id="payment_type" name="payment_type" value="charge_knet" data-validate='{"required":true}'><br>
+            </div>
+            <div class="brands brandKnet"></div>
+            <div class="brands margin"></div>
+            <div>
+            <input type="radio" name="payment_type" value="credit_card">   
+            </div>
+            <div class="brands brandVisa"></div>
+
+        </div> -->
+       
+
+        <div></div>
+
+        
+
+    
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+
+        <div class="payment-method-billing-address tap-address">
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button class="action primary checkout"
+                        type="submit"
+                        data-bind="
+                        click: placeOrder,
+                        attr: {title: $t('Place Order')},
+                        css: {disabled: !isPlaceOrderActionAllowed()},
+                        enable: (getCode() == isChecked())
+                        "
+                        disabled>
+						
+                    <span data-bind="i18n: 'Pay with Tap'"></span>
+                </button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<script>
+
+   window.valuesConfig = '<?php /* @escapeNotVerified */ echo $block->getValuesConfig(); ?>'
+</script>
+<script>
+    $('payment_type').css('background-image', 'url(' +  + ')');
+</script>
