@@ -15,7 +15,8 @@ Configuration:
 goto Admin->System->Cache Management and Clear all Cache
 Now you can collect payment via Tap
 Screenshots:
- 1.Knet Configuration Page  https://www.screencast.com/t/ZfqtEBd4e
+ 1.Knet Configuration Page  https://www.screencast.com/t/ZfqtEBd4e 
+ ![Knet Configuration Page screenshot 01](https://content.screencast.com/users/m.khan3005/folders/Capture/media/b118761b-2783-42aa-837f-c980b5667b35/LWR_Recording.png)
  2.Tap Configuration Page   https://www.screencast.com/t/7wMv6zmT
 
 
