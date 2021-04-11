@@ -134,7 +134,7 @@ class Response extends \Gateway\Tap\Controller\Tap
 			
 
 			
-			$order = $this->getOrderbyId($response->reference->order);
+			
 			$lastorderId = $this->_checkoutSession->getLastOrderId();
 			$lastorderId = (int)$lastorderId;
 
