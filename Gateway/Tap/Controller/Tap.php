@@ -58,7 +58,8 @@ abstract class Tap extends \Magento\Framework\App\Action\Action
         \Psr\Log\LoggerInterface $logger,
         \Magento\Sales\Model\Service\InvoiceService $invoiceService,
          \Magento\Framework\DB\Transaction $transaction,
-         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder
+         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
+         \Magento\Framework\Controller\Result\JsonFactory $jsonResultFactory
         // \PaymentTokenFactoryInterface $paymentTokenFactory
 
     ) {
@@ -72,6 +73,7 @@ abstract class Tap extends \Magento\Framework\App\Action\Action
         $this->_invoiceService = $invoiceService;
         $this->transaction        = $transaction;
         $this->transactionBuilder        = $transactionBuilder;
+        $this->jsonResultFactory = $jsonResultFactory;
         //$this->paymentTokenFactory = $paymentTokenFactory;
         parent::__construct($context);
     }

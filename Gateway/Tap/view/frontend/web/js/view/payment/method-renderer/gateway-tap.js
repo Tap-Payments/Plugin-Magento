@@ -29,21 +29,31 @@ define(
 			template_path ='Gateway_Tap/payment/gateway2';
 		}
 		var response_url = window.checkoutConfig.payment.tap.responseUrl;
-		var transaction_mode = window.checkoutConfig.payment.tap.transaction_mode;
+		var config_trans_mode = window.checkoutConfig.payment.tap.transaction_mode;
 		var knet = window.checkoutConfig.payment.tap.knet;
 		var guest_customerdata = customerData.get('checkout-data')();
-		if (!customer.isLoggedIn()) {
-			var email =  guest_customerdata.inputFieldEmailValue;
-			var firstname = guest_customerdata.shippingAddressFromData.firstname;
-			var lastname = guest_customerdata.shippingAddressFromData.lastname;
-			var phone = guest_customerdata.shippingAddressFromData.telephone;
-		}
-		else {
-			var email = window.checkoutConfig.customerData.email;
-			var firstname = window.checkoutConfig.customerData.firstname;
-			var lastname = window.checkoutConfig.customerData.lastname;
-			var phone = '';
-		}
+
+			var response_url = ''; 
+            var post_url = '';
+            var firstname = '';
+            var lastname = '';
+            var email = '';
+            var phone = '';
+            var currency_code = '' ;
+            var amount = '';
+            //var config_trans_mode = '';
+		// if (!customer.isLoggedIn()) {
+		// 	var email =  guest_customerdata.inputFieldEmailValue;
+		// 	var firstname = guest_customerdata.shippingAddressFromData.firstname;
+		// 	var lastname = guest_customerdata.shippingAddressFromData.lastname;
+		// 	var phone = guest_customerdata.shippingAddressFromData.telephone;
+		// }
+		// else {
+		// 	var email = window.checkoutConfig.customerData.email;
+		// 	var firstname = window.checkoutConfig.customerData.firstname;
+		// 	var lastname = window.checkoutConfig.customerData.lastname;
+		// 	var phone = '';
+		// }
 		var middlename = '';
 		var country_code = '';
 		var cart_items = window.checkoutConfig.quoteItemData;
@@ -63,7 +73,7 @@ define(
 			})
 
 		});
-		var config_trans_mode = 'capture';
+		//var config_trans_mode = 'capture';
 		var total = qoute.getTotals()();
 		console.log()
 		var total = qoute.getTotals()();
@@ -110,124 +120,39 @@ define(
 		var currency_code = window.checkoutConfig.quoteData.quote_currency_code;
 		var total_amount = qoute_total_amount;
 		//console.log(amount);
-		if (ui_mode == 'popup' || ui_mode == 'redirect') {
+// 		if (ui_mode == 'popup' || ui_mode == 'redirect') {
 
-			if (config_trans_mode == 'capture') {
-				var object_trans = {
-					mode: 'charge',
-					charge:{
-							saveCard: false,
-							threeDSecure: true,
-							description: "Test Description",
-							statement_descriptor: "Sample",
-							reference:{
-									transaction: "txn_0001",
-									order: orderId
-									},
-							metadata:{},
-							receipt:{
-								email: false,
-								sms: true
-								},
-							redirect: response_url,
-							post: post_url
-					}
-				}
-			}
 
-			if (config_trans_mode == 'authorize') {
-					var object_trans = {
-						mode :'authorize',
-						authorize:{
-		            			auto:{
-		              				type:'VOID', 
-		              				time: 100
-		            			},
-		            	saveCard: false,
-		            	threeDSecure: true,
-		            	description: "description",
-		            	statement_descriptor:"statement_descriptor",
-		            	reference:{
-		              							transaction: "txn_0001",
-		              							order: orderId
-		            						},
-		            					metadata:{},
-		            					receipt:{
-		              					email: false,
-		              					sms: true
-		            					},
-		            				redirect: response_url,
-		            				post: post_url
 
-										}
-								}
-			}
+// 			if (config_trans_mode == 'authorize') {
+// 					var object_trans = {
+// 						mode :'authorize',
+// 						authorize:{
+// 		            			auto:{
+// 		              				type:'VOID', 
+// 		              				time: 100
+// 		            			},
+// 		            	saveCard: false,
+// 		            	threeDSecure: true,
+// 		            	description: "description",
+// 		            	statement_descriptor:"statement_descriptor",
+// 		            	reference:{
+// 		              							transaction: "txn_0001",
+// 		              							order: orderId
+// 		            						},
+// 		            					metadata:{},
+// 		            					receipt:{
+// 		              					email: false,
+// 		              					sms: true
+// 		            					},
+// 		            				redirect: response_url,
+// 		            				post: post_url
 
-		}
-		if (ui_mode == 'popup' || ui_mode == 'redirect')  {
-            require(["goSellJs"],
-				function(goSell) {
-					console.log(total_amount);
-								goSell.config({
-			  						gateway:{
-										publicKey:active_pk,
-										language:"ar",
-										contactInfo:true,
-										supportedCurrencies:"all",
-										supportedPaymentMethods: "all",
-										saveCardOption:false,
-										customerCards: true,
-										notifications:'standard',
-										labels:{
-											cardNumber:"Card Number",
-											expirationDate:"MM/YY",
-											cvv:"CVV",
-											cardHolder:"Name on Card",
-											actionButton:"Pay"
-										},
-										style: {
-											base: {
-					  							color: '#535353',
-					  							lineHeight: '18px',
-					  							fontFamily: 'sans-serif',
-					  							fontSmoothing: 'antialiased',
-					  							fontSize: '16px',
-					  							'::placeholder': {
-													color: 'rgba(0, 0, 0, 0.26)',
-													fontSize:'15px'
-					  							}
-											},
-											invalid: {
-					  							color: 'red',
-					  							iconColor: '#fa755a '
-											}
-										}
-			  						},
-			  						customer:{
-										id:"",
-										first_name: firstname,
-										middle_name: middlename,
-										last_name: lastname,
-										email: email,
-										phone: {
-											country_code: country_code,
-											number: phone
-										}
-			  						},
-			  						order:{
-										amount: total_amount,
-										currency:currency_code,
-										items:tap_args,
-										shipping:null,
-										taxes: null
-			  						},
+// 										}
+// 								}
+// 			}
 
-									transaction: object_trans
-								});
-								
-							}
-						)
-                    }
+// 		}
 
 		return Component.extend({
 			reloadPayment: function() {
@@ -451,13 +376,205 @@ define(
         
 
 			afterPlaceOrder : function () {
+			    if (ui_mode == 'popup')  {
+				    var self = this;
+				    var AjaxDataResponse;
+                    $.ajax({
+                        type: 'POST',
+                        // url: urlBuilder.build("Standard/Success"),
+                        url: window.checkoutConfig.payment.tap.redirectUrl,
+                        async: false,
+                        data: {
+                            email: 'test@gmail.com',
+                        },
+
+                        /**
+                         * Success callback
+                        * @param {Object} response
+                        */
+                        success: function (response) {
+
+
+                        //var response = JSON.parse(response);
+                        // console.log(response);
+                        AjaxDataResponse = response;
+                        // console.log(response.customer.first_name);
+                        // orderId = response.reference.order;
+                        // response_url = response.redirect;
+                        // post_url = response.post;
+                        // firstname22 = response.customer.first_name;
+                        // lastname = response.customer.last_name;
+                        // email = response.customer.email;
+                        // phone = response.customer.phone.number;
+                        // currency_code = response.currency;
+                        // amount = response.amount;
+                        // console.log(response)
+                        // myObj.cars[0];
+                        //console.log(response->id);
+
+                      
+                        // if (response.customer.first_name) {
+                        //     self.renderCheckout(response);
+                           
+                        // } 
+                    }
+                });
+
+                console.log("----our variables----");
+				console.log(AjaxDataResponse);
+				//console.log(AjaxDataResponse.redirect);
+				var country_code = '965';
+				response_url = AjaxDataResponse.redirect.url;
+               	post_url = AjaxDataResponse.post.url;
+               	firstname = AjaxDataResponse.customer.first_name;
+               	lastname = AjaxDataResponse.customer.last_name;
+               	email = AjaxDataResponse.customer.email;
+               	phone = AjaxDataResponse.customer.phone.number;
+               	currency_code = AjaxDataResponse.currency;
+               	amount = AjaxDataResponse.amount;
+               	orderId = AjaxDataResponse.reference.order;
+               	console.log(country_code);
+               	console.log(post_url);
+                console.log(firstname);
+                console.log(phone);
+                console.log(email);
+                console.log(response_url);
+                console.log(currency_code);
+                console.log(amount);
+                console.log(orderId);
+                console.log(config_trans_mode);
+				if (config_trans_mode == 'capture') {
+					var object_trans = {
+						mode: 'charge',
+						charge:{
+							saveCard: false,
+							threeDSecure: true,
+							description: orderId,
+							statement_descriptor: "Sample",
+							reference:{
+									transaction: "txn_0001",
+									order: orderId
+									},
+							metadata:{},
+							receipt:{
+								email: false,
+								sms: true
+								},
+							redirect: response_url,
+							post: post_url
+						}
+					}
+				}
+				
+			if (config_trans_mode == 'authorize') {
+				var object_trans = {
+					mode :'authorize',
+					authorize:{
+		            	auto:{
+		              		type:'VOID', 
+		              		time: 100
+		            	},
+		            saveCard: false,
+		            threeDSecure: true,
+		            description: "description",
+		            statement_descriptor:"statement_descriptor",
+		            reference:{
+		              	transaction: "txn_0001",
+		              	order: orderId
+		            },
+		            metadata:{},
+		            receipt:{
+		              email: false,
+		              sms: true
+		            },
+		            redirect: response_url,
+		            post: post_url
+					}
+				}
+			}
+
+		}
+
+		if (ui_mode == 'popup' || ui_mode == 'redirect')  {
+            require(["goSellJs"],
+				function(goSell) {
+								goSell.config({
+			  						gateway:{
+										publicKey:active_pk,
+										language:"en",
+										contactInfo:true,
+										supportedCurrencies:"all",
+										supportedPaymentMethods: "all",
+										saveCardOption:true,
+										customerCards: true,
+										notifications:'standard',
+								        callback: (response) => {
+  									        console.log("response", response);
+							        	},
+										labels:{
+											cardNumber:"Card Number",
+											expirationDate:"MM/YY",
+											cvv:"CVV",
+											cardHolder:"Name on Card",
+											actionButton:"Pay"
+										},
+										style: {
+											base: {
+					  							color: '#535353',
+					  							lineHeight: '18px',
+					  							fontFamily: 'sans-serif',
+					  							fontSmoothing: 'antialiased',
+					  							fontSize: '16px',
+					  							'::placeholder': {
+													color: 'rgba(0, 0, 0, 0.26)',
+													fontSize:'15px'
+					  							}
+											},
+											invalid: {
+					  							color: 'red',
+					  							iconColor: '#fa755a '
+											}
+										}
+			  						},
+			  						customer:{
+										id:"",
+										first_name: firstname,
+										middle_name: middlename,
+										last_name: lastname,
+										email: email,
+										phone: {
+											country_code: country_code,
+											number: phone
+										}
+			  						},
+			  						order:{
+										amount: total_amount,
+										currency:currency_code,
+										items:tap_args,
+										shipping:null,
+										taxes: null
+			  						},
+
+									transaction: object_trans
+								});
+								
+							}
+						)
+                    }
+
 					require(["goSellJs"],
 						function(goSell) {
+						    console.log(object_trans);
+						    
 							var payment_type_mode = jQuery("input[name='payment_type']:checked").val();
+							    console.log(ui_mode);
 								if (ui_mode == 'redirect' && payment_type_mode == 'CC') {
-									goSell.openPaymentPage();	
+								    $.mage.redirect(window.checkoutConfig.payment.tap.redirectUrl+'?'+'redirect=redirect');
+								    //console.log('inredirect');
+									//goSell.openPaymentPage();	
 								}
 								else if (ui_mode == 'popup' && payment_type_mode == 'CC') {
+								    console.log('opppppp');
 									goSell.openLightBox();
 								}
 					            if ( ui_mode == 'token'){

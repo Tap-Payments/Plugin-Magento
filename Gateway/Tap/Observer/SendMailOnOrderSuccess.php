@@ -47,8 +47,12 @@ class SendMailOnOrderSuccess implements ObserverInterface
     {
 
         $orderIds = $observer->getEvent()->getOrderIds();
+        $order = $this->orderModel->create()->load($orderIds[0]);
+        $payment_method = $order->getPayment()->getMethodInstance()->getCode();
+        //var_dump($payment);exit;
+        //$payment = $this->orderModel->getPayment()->getMethodInstance()->getCode();
         //var_dump($orderIds);exit;
-        if($orderIds)
+        if($payment_method == 'tap')
         {
             $this->checkoutSession->setForceOrderMailSentOnSuccess(true);
 

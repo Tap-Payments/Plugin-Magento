@@ -151,6 +151,7 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         else {
             $active_sk = $this->getConfigData('live_secret_key');
         }
+        $ui_mode = $this->getConfigData('ui_mode');
         $transaction_mode   =   $this->getConfigData('transaction_mode');
         $amount             =   $order->getGrandTotal();
         
@@ -158,6 +159,7 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         
 
         $orderid            =   $order->getEntityId();
+        $orderIncrementId   =   $order->getIncrementId();
         $CstFName           =   $order->getBillingAddress()->getFirstName();
         $CstLName           =   $order->getBillingAddress()->getLastName();
         $CstEmail           =   $order->getCustomerEmail();
@@ -176,12 +178,12 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         $trans_object["currency"]               = $currencyCode;
         $trans_object["threeDsecure"]           = true;
         $trans_object["save_card"]              = false;
-        $trans_object["description"]            = 'Test Description';
+        $trans_object["description"]            = $orderIncrementId;
         $trans_object["statement_descriptor"]   = 'Sample';
         $trans_object["metadata"]["udf1"]       = 'test';
         $trans_object["metadata"]["udf2"]          = 'test';
-        $trans_object["reference"]["transaction"]  = 'txn_0001';
-        $trans_object["reference"]["order"]        = $orderid;
+        $trans_object["reference"]["transaction"]  = $orderIncrementId;
+        $trans_object["reference"]["order"]        = $orderIncrementId;
         $trans_object["receipt"]["email"]          = false;
         $trans_object["receipt"]["sms"]            = true;
         $trans_object["customer"]["first_name"]    = $CstFName;
@@ -192,49 +194,45 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         $trans_object["source"]["id"] = $source_id;
         $trans_object["post"]["url"] = $post_url;
         $trans_object["redirect"]["url"] = $redirectUrl;
-        // $obj = json_encode($trans_object);
-        //echo '<pre>';var_dump($trans_object);exit;
-
-       //  // if ($transaction_mode == 'authorize') {
-       //      $trans_object["auto"]["type"] = "VOID";
-       //      $trans_object["auto"]["time"] = "100";
-       //      $request_url = "https://api.tap.company/v2/authorize";
-       // // }
-
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-                CURLOPT_URL => $request_url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_POSTFIELDS => json_encode($trans_object),
-                CURLOPT_HTTPHEADER => array(
-                            "authorization: Bearer ".$active_sk,
-                            "content-type: application/json"
-                ),
-            )
-        );
-
-        $response = curl_exec($curl);
-        $response = json_decode($response);
-        //print_r($response);exit;
-
-        $err = curl_error($curl);
-        curl_close($curl);
-        if ($err) {
-            echo "cURL Error #:" . $err;
-        }
-        //var_dump();exit;
-        if (isset($response->transaction->url))
-        {
-            return $response->transaction->url;
+        if ($source_id == 'src_all' && $ui_mode == 'popup') {
+            return $trans_object;
         }
         else {
-            return 'bad request';
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                    CURLOPT_URL => $request_url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                    CURLOPT_POSTFIELDS => json_encode($trans_object),
+                    CURLOPT_HTTPHEADER => array(
+                        "authorization: Bearer ".$active_sk,
+                        "content-type: application/json"
+                    ),
+                )
+            );
+
+            $response = curl_exec($curl);
+            $response = json_decode($response);
+            //print_r($response);exit;
+
+            $err = curl_error($curl);
+            curl_close($curl);
+            if ($err) {
+                echo "cURL Error #:" . $err;
+            }
+            //var_dump();exit;
+            if (isset($response->transaction->url))
+            {
+                return $response->transaction->url;
+            }
+            else {
+                return 'bad request';
+            }
         }
       
     }

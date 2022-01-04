@@ -6,7 +6,7 @@ class Redirect extends \Gateway\Tap\Controller\Tap
 {
     public function execute()
     {
-		
+		$popup = false;
         if (isset($_GET['token'])) {
 			//$amount = $_GET['amount'];
             $source_id = $_GET['token'];
@@ -17,21 +17,21 @@ class Redirect extends \Gateway\Tap\Controller\Tap
         else if (isset($_GET['benefit'])) {
             $source_id = 'src_bh.benefit';
         }
-		//echo $source_id;exit;
-        //echo $_GET['token'];exit;
-        //echo $source_id;exit;
-        // $source_id = null;
-        // switch ($_GET) {
-        //     case $_GET['token']:
-        //         $source_id = $_GET['token'];
-        //         break;
-        //     case $_GET['knet']:
-        //         $source_id = 'src_kw.knet';
-        //     break;
-        //     case $_GET['benefit']:
-        //         $source_id = 'src_bh.benefit';
-        //     break;
-        // }
+        else if(isset($_GET['redirect'])){
+            $source_id = 'src_all';
+        }
+        else {
+            $source_id = 'src_all';
+            $popup = true;
+        }
+        $order = $this->getOrder();
+        $orderId = $order->getIncrementId();
+        if ($source_id == 'src_all' && $popup == true) {
+            $data = $this->getTapModel()->redirectMode($order,$source_id);
+            $result = $this->jsonResultFactory->create();
+            $result->setData($data);
+            return $result;
+        }
 
         $order = $this->getOrder();
 		$orderId = $order->getIncrementId(); 
