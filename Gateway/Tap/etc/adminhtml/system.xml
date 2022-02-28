@@ -1,0 +1,91 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="tap" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Tap</label>
+                <comment>
+                    <![CDATA[<a href="https://www.tap.company/register/" target="_blank">Click here to sign up for Tap account</a>]]>
+                </comment>
+                <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>payment/tap/active</config_path>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                    <config_path>payment/tap/title</config_path>
+                </field>
+                <field id="transaction_mode" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Transaction Mode</label>        
+                    <source_model>Gateway\Tap\Model\Config\Source\TransactionMode</source_model>
+                    <config_path>payment/tap/transaction_mode</config_path>
+                </field>
+                <field id="ui_mode" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Popup/Redirect</label>        
+                    <source_model>Gateway\Tap\Model\Config\Source\UImode</source_model>
+                    <config_path>payment/tap/ui_mode</config_path>
+                </field>
+                <field id="test_public_key" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Test Public Key</label>
+                    <comment>Provided By Tap</comment>
+                    <config_path>payment/tap/test_public_key</config_path>
+                </field>
+				<field id="test_secret_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Test Secret Key</label>
+                    <comment>Provided By Tap</comment>
+                    <config_path>payment/tap/test_secret_key</config_path>
+                </field>
+                <field id="live_public_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Live Public Key</label>
+                    <comment>Provided By Tap</comment>
+                    <config_path>payment/tap/live_public_key</config_path>
+                </field>
+                <field id="live_secret_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Live Secret Key</label>
+                    <comment>Provided By Tap</comment>
+                    <config_path>payment/tap/live_secret_key</config_path>
+                </field>
+                <field id="post_url" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Post URL</label>
+                    <config_path>payment/tap/post_url</config_path>
+                </field>
+                <field id="debug" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Staging Mode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>payment/tap/debug</config_path>
+                </field>   
+                <field id="knet_checkout" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enable Knet at Checkout</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>payment/tap/knet</config_path>
+                </field>  
+                <field id="benefit_checkout" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enable Benefit at Checkout</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>payment/tap/benefit</config_path>
+                </field>
+                <field id="applepay_checkout" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="2" showInStore="0">
+                    <label>Enable Apple Pay at Checkout</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>payment/tap/applepay</config_path>
+                </field>
+
+                <field id="order_status" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>New Order Status</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status\NewStatus</source_model>
+                    <config_path>payment/tap/order_status</config_path>
+                </field>   
+                <field id="allowspecific" translate="label" type="allowspecific" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Payment from Applicable Countries</label>
+                    <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+                    <config_path>payment/tap/allowspecific</config_path>
+                </field>
+                <field id="specificcountry" translate="label" type="multiselect" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Payment from Specific Countries</label>
+                    <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                    <config_path>payment/tap/specificcountry</config_path>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

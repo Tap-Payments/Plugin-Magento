@@ -1,0 +1,13 @@
+<dl class="payment-method gateway">
+    <dt class="title"><?php echo $block->escapeHtml($block->getMethod()->getTitle()) ?></dt>
+    <dt class="title"">
+    <?php 
+	    /* $params = $block->getRequest()->getParams(); 
+	    if ($block->getChargeId($params['order_id'])) {
+	    	echo "Tap ID: ".$block->getChargeId($params['order_id'])."<br>";
+	    	echo  "Card Number: " . str_repeat('*' , 12) .$block->getLastFourDigits($params['order_id'])."<br>";
+	    	echo "Payment type:  ". $block->getPaymentType($params['order_id'])."<br>";
+	    } */
+    ?>
+    </dt>
+</dl>
