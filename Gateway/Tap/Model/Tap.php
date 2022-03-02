@@ -1,10 +1,8 @@
 <?php
 
 namespace Gateway\Tap\Model;
-
 use Gateway\Tap\Helper\Data as DataHelper;
 use Gateway\Tap\Controller\Standard;
-
 class Tap extends \Magento\Payment\Model\Method\AbstractMethod
 {
     const CODE = 'tap';
@@ -22,7 +20,6 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_infoBlockType = 'Gateway\Tap\Block\Info\Tap';
     protected $urlBuilder;
 
-
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -38,7 +35,6 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         \Magento\Sales\Model\Order\Invoice $invoice,
         \Magento\Sales\Model\Service\CreditmemoService $creditmemoService,
         \Magento\Framework\App\Request\Http $request
-      
 
     ) {
         $this->helper = $helper;
@@ -62,8 +58,6 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         $this->request = $request;
        
     }
-    //$active_sk = $this->getConfigData('test_secret_key');
-
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount){
         $mode = $this->getConfigData('debug');
         if ($mode) {
@@ -105,7 +99,6 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
                                 ),
         ));
 
-
         $response = curl_exec($curl);
         $obj = json_decode($response);
         $transactionId = $obj->id;
@@ -119,7 +112,6 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
             echo $response;
         }
         
-    
             $payment
             ->setTransactionId($transactionId . '-' . \Magento\Sales\Model\Order\Payment\Transaction::TYPE_REFUND)
             ->setParentTransactionId($transactionId)
@@ -127,7 +119,6 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
             ->setShouldCloseParentTransaction(1);
             return $this;
     }
-
 
     public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null)
     {
@@ -141,8 +132,6 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         return parent::isAvailable($quote);
     }
 
-
-
     public function redirectMode($order,$source_id){
         $mode = $this->getConfigData('debug');
         if ($mode) {
@@ -154,10 +143,7 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         $ui_mode = $this->getConfigData('ui_mode');
         $transaction_mode   =   $this->getConfigData('transaction_mode');
         $amount             =   $order->getGrandTotal();
-        
         $currencyCode       =   $order->getOrderCurrencyCode();  
-        
-
         $orderid            =   $order->getEntityId();
         $orderIncrementId   =   $order->getIncrementId();
         $CstFName           =   $order->getBillingAddress()->getFirstName();
@@ -215,17 +201,13 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
                     ),
                 )
             );
-
             $response = curl_exec($curl);
             $response = json_decode($response);
-            //print_r($response);exit;
-
             $err = curl_error($curl);
             curl_close($curl);
             if ($err) {
                 echo "cURL Error #:" . $err;
             }
-            //var_dump();exit;
             if (isset($response->transaction->url))
             {
                 return $response->transaction->url;

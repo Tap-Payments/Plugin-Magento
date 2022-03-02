@@ -1,7 +1,6 @@
 <?php
 
 namespace Gateway\Tap\Observer;
-
 use Magento\Framework\Event\ObserverInterface;
 
 class StopMailOnOrderFailure implements ObserverInterface
@@ -54,8 +53,6 @@ class StopMailOnOrderFailure implements ObserverInterface
 
             $order = $this->orderModel->create()->load($orderIds[0]);
             $this->orderSender->send($order, true);
-           // $order->setIsCustomerNotified(true);
-            
         }
     }
 }

@@ -41,19 +41,6 @@ define(
             var phone = '';
             var currency_code = '' ;
             var amount = '';
-            //var config_trans_mode = '';
-		// if (!customer.isLoggedIn()) {
-		// 	var email =  guest_customerdata.inputFieldEmailValue;
-		// 	var firstname = guest_customerdata.shippingAddressFromData.firstname;
-		// 	var lastname = guest_customerdata.shippingAddressFromData.lastname;
-		// 	var phone = guest_customerdata.shippingAddressFromData.telephone;
-		// }
-		// else {
-		// 	var email = window.checkoutConfig.customerData.email;
-		// 	var firstname = window.checkoutConfig.customerData.firstname;
-		// 	var lastname = window.checkoutConfig.customerData.lastname;
-		// 	var phone = '';
-		// }
 		var middlename = '';
 		var country_code = '';
 		var cart_items = window.checkoutConfig.quoteItemData;
@@ -73,86 +60,15 @@ define(
 			})
 
 		});
-		//var config_trans_mode = 'capture';
 		var total = qoute.getTotals()();
 		console.log()
 		var total = qoute.getTotals()();
 		console.log(total);
 		var qoute_total_amount = total.grand_total;
 		var orderId = window.checkoutConfig.payment.tap.orderId;
-		// console.log(total.total_segments);
-		// var total_segments = total.total_segments;
-		// var obj = {};
-		// for (var i = 0; i < total_segments.length; ++i){
-		// 	obj[total_segments[i].code] = total_segments[i];
-		// }
-		// console.log(obj.partial_pay_now.value);
-		
-		
-		//var partial_total = window.checkoutConfig.quoteData.partial_pay_now;
-		//partial_total = obj.partial_pay_now.value;
 		var amount = window.checkoutConfig.totalsData.base_grand_total;
-		
-		//console.log(amount);
-		//console.log(window.checkoutConfig.totalsData.base_grand_total);
-		//console.log(partial_total);
-		// if (partial_total ==="") {
-		// 	var total_amount = amount;
-		// }
-		// else {
-		// 	var total_amount = partial_total;
-		// }
-
-		//if (typeof(partial_total) != "undefined" || partial_total.length > 0) {
-			//var total_amount = partial_total
-		//} else {
-			//var total_amount = amount;
-		// if (partial_total == 0.000) {
-		// 	var total_amount = amount;
-		// }
-		// else {
-		// 	var total_amount = obj.partial_pay_now.value;
-		// }
-			
-		
-		// console.log(partial_total);
-		
 		var currency_code = window.checkoutConfig.quoteData.quote_currency_code;
 		var total_amount = qoute_total_amount;
-		//console.log(amount);
-// 		if (ui_mode == 'popup' || ui_mode == 'redirect') {
-
-
-
-// 			if (config_trans_mode == 'authorize') {
-// 					var object_trans = {
-// 						mode :'authorize',
-// 						authorize:{
-// 		            			auto:{
-// 		              				type:'VOID', 
-// 		              				time: 100
-// 		            			},
-// 		            	saveCard: false,
-// 		            	threeDSecure: true,
-// 		            	description: "description",
-// 		            	statement_descriptor:"statement_descriptor",
-// 		            	reference:{
-// 		              							transaction: "txn_0001",
-// 		              							order: orderId
-// 		            						},
-// 		            					metadata:{},
-// 		            					receipt:{
-// 		              					email: false,
-// 		              					sms: true
-// 		            					},
-// 		            				redirect: response_url,
-// 		            				post: post_url
-
-// 										}
-// 								}
-// 			}
-
-// 		}
 
 		return Component.extend({
 			reloadPayment: function() {
@@ -170,7 +86,6 @@ define(
                         if (response) {
                             var deferred = jQuery.Deferred();
                             getTotalsAction([], deferred);
-                            // var deferred = $.Deferred();
                              fullScreenLoader.stopLoader();
                             getPaymentInformationAction(deferred);
                             jQuery.when(deferred).done(function () {
@@ -209,7 +124,6 @@ define(
 							if (event) {
 								event.preventDefault();
 							}
-						
 							var self = this,
 							placeOrder,
 							emailValidationResult = customer.isLoggedIn(),
@@ -325,7 +239,6 @@ define(
     								cvv:"CVV",
     								cardHolder:"Card Holder Name"
   								};
-								//payment options
 							var paymentOptions = {
   									currencyCode:"all",
   									labels : labels,
@@ -370,7 +283,6 @@ define(
       									var tokenElement = document.getElementById('token');
       									tokenElement.textContent = result.id;
       									console.log(result.id);
-    								//return result.id;
     								}
   								});
 							});
@@ -392,7 +304,6 @@ define(
 				    var AjaxDataResponse;
                     $.ajax({
                         type: 'POST',
-                        // url: urlBuilder.build("Standard/Success"),
                         url: window.checkoutConfig.payment.tap.redirectUrl,
                         async: false,
                         data: {
@@ -406,34 +317,13 @@ define(
                         success: function (response) {
 
 
-                        //var response = JSON.parse(response);
-                        // console.log(response);
                         AjaxDataResponse = response;
-                        // console.log(response.customer.first_name);
-                        // orderId = response.reference.order;
-                        // response_url = response.redirect;
-                        // post_url = response.post;
-                        // firstname22 = response.customer.first_name;
-                        // lastname = response.customer.last_name;
-                        // email = response.customer.email;
-                        // phone = response.customer.phone.number;
-                        // currency_code = response.currency;
-                        // amount = response.amount;
-                        // console.log(response)
-                        // myObj.cars[0];
-                        //console.log(response->id);
 
-                      
-                        // if (response.customer.first_name) {
-                        //     self.renderCheckout(response);
-                           
-                        // } 
                     }
                 });
 
                 console.log("----our variables----");
 				console.log(AjaxDataResponse);
-				//console.log(AjaxDataResponse.redirect);
 				var country_code = '965';
 				response_url = AjaxDataResponse.redirect.url;
                	post_url = AjaxDataResponse.post.url;
@@ -581,15 +471,12 @@ define(
 							    console.log(ui_mode);
 								if (ui_mode == 'redirect' && payment_type_mode == 'CC') {
 								    $.mage.redirect(window.checkoutConfig.payment.tap.redirectUrl+'?'+'redirect=redirect');
-								    //console.log('inredirect');
-									//goSell.openPaymentPage();	
 								}
 								else if (ui_mode == 'popup' && payment_type_mode == 'CC') {
 								    console.log('opppppp');
 									goSell.openLightBox();
 								}
 					            if ( ui_mode == 'token'){
-					            	//;
 								var config_trans_mode = '';
 								console.log(ui_mode);
 								var token = document.getElementById("token").innerHTML;

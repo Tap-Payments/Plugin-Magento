@@ -1,22 +1,17 @@
 <?php
 
 namespace Gateway\Tap\Model;
-
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Framework\UrlInterface as UrlInterface;
 use Gateway\Tap\Helper;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-
 class TapConfigProvider implements ConfigProviderInterface
 {
     protected $methodCode = "tap";
-
     protected $method;
-    
     protected $urlBuilder;
     protected $checkoutSession;
-
     public function __construct(
         PaymentHelper $paymentHelper, 
         UrlInterface $urlBuilder,
@@ -27,18 +22,12 @@ class TapConfigProvider implements ConfigProviderInterface
         $this->_checkoutSession = $checkoutSession;
     }
 
-
-
     public function getConfig()
     {
-        
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $order = $objectManager->get('Magento\Sales\Model\Order');
         $current_order = $this->_checkoutSession->getLastRealOrder();
         $orderId = $current_order->getEntityId();
-
-      
-
         $test_public_key = $this->method->getConfigData('test_public_key');
         $live_public_key = $this->method->getConfigData('live_public_key');
         $post_url = $this->method->getConfigData('post_url');
@@ -54,9 +43,6 @@ class TapConfigProvider implements ConfigProviderInterface
             $active_pk = $live_public_key;
         }
         $transaction_mode = $this->method->getConfigData('transaction_mode');
-
-       
-
         return $this->method->isAvailable() ? [
             'payment' => [
                 'tap' => [

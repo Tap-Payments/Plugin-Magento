@@ -10,11 +10,6 @@
     <type name="Magento\Sales\Model\Order\Email\Sender\OrderSender">
         <plugin name="Tap-OrderSender-Plugin" type="\Gateway\Tap\Plugin\OrderSenderPluginTap"/>
     </type>
-
-  <!--   <type name="Magento\Sales\Model\Order\Email\Container\OrderIdentity">
-        <plugin name="change_is_enable_method" type="\Gateway\Tap\Plugin\Sales\Order\Email\Container\OrderIdentityPlugin"/>
-    </type> -->
-
 </config>
 
 

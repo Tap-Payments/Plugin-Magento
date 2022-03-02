@@ -8,7 +8,6 @@ class Redirect extends \Gateway\Tap\Controller\Tap
     {
 		$popup = false;
         if (isset($_GET['token'])) {
-			//$amount = $_GET['amount'];
             $source_id = $_GET['token'];
         }
         else if (isset($_GET['knet'])) {
@@ -38,7 +37,6 @@ class Redirect extends \Gateway\Tap\Controller\Tap
 
         $order = $this->getOrder();
 		$orderId = $order->getIncrementId(); 
-
         if ($order->getBillingAddress())
         {
             $charge_url = $this->getTapModel()->redirectMode($order,$source_id);
@@ -55,18 +53,14 @@ class Redirect extends \Gateway\Tap\Controller\Tap
                 return $resultRedirect;
             }
             $this->addOrderHistory($order,'<br/>The customer was redirected to Tap');
-            
         }
         return $this->chargeRedirect($charge_url);
     }
 
     public function chargeRedirect($url){
-       // var_dump($_REQUEST);exit;
-        // $_REQUEST['token'];exit;
         $resultRedirect = $this->resultRedirectFactory->create();
         $resultRedirect->setUrl($url);
         return $resultRedirect;
-        
     }
 
 }

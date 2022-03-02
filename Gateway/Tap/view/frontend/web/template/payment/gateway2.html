@@ -4,7 +4,6 @@
         <label data-bind="attr: {'for': getCode()}" class="label">
             <span data-bind="text: getTitle()"></span>
         </label>
-         <!-- <img class="tap-logo" src="https://ecwid.gosell.io/cp/img/tap_payments.png"> -->
     </div>
    
     <div>
@@ -22,22 +21,7 @@
         <div>
             <input type="radio" id="payment_type" name="payment_type" value="applepay" data-validate='{"required":true}' label="ApplePay" data-bind="visible: getApplepayAtCheckout()"><span data-bind="text:getapplepay(),visible: getApplepayAtCheckout() " style="white-space: pre;"></span>
         </div>
-        <!-- <div>
-            <div>
-                <input type="radio" id="payment_type" name="payment_type" value="charge_knet" data-validate='{"required":true}'><br>
-            </div>
-            <div class="brands brandKnet"></div>
-            <div class="brands margin"></div>
-            <div>
-            <input type="radio" name="payment_type" value="credit_card">   
-            </div>
-            <div class="brands brandVisa"></div>
 
-        </div> -->
-    
-        
-
-    
         <!-- ko foreach: getRegion('messages') -->
         <!-- ko template: getTemplate() --><!-- /ko -->
         <!--/ko-->
