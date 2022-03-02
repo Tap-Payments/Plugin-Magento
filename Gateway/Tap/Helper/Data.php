@@ -1,11 +1,9 @@
 <?php
 
 namespace Gateway\Tap\Helper;
-
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-
 class Data extends AbstractHelper
 {
     public function getUrl($route, $params = []) 

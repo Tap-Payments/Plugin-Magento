@@ -63,7 +63,12 @@
                     <label>Enable Benefit at Checkout</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/tap/benefit</config_path>
-                </field> 
+                </field>
+                <field id="applepay_checkout" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="2" showInStore="0">
+                    <label>Enable Apple Pay at Checkout</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>payment/tap/applepay</config_path>
+                </field>
 
                 <field id="order_status" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>New Order Status</label>
