@@ -62,7 +62,7 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         $this->request = $request;
        
     }
-    //$active_sk = $this->getConfigData('test_secret_key');
+
 
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount){
         $mode = $this->getConfigData('debug');
@@ -203,7 +203,6 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         $trans_object["post"]["url"] = $post_url;
         $trans_object["redirect"]["url"] = $redirectUrl;
         if ($source_id == 'src_all' && $ui_mode == 'popup') {
-            //$trans_object["hashstring"] = $hashstring;
             return $trans_object;
         }
         else {
@@ -228,14 +227,12 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
 
             $response = curl_exec($curl);
             $response = json_decode($response);
-           // print_r($response);exit;
 
             $err = curl_error($curl);
             curl_close($curl);
             if ($err) {
                 echo "cURL Error #:" . $err;
             }
-            //var_dump();exit;
             if (isset($response->transaction->url))
             {
                 return $response->transaction->url;
