@@ -17,8 +17,5 @@ Now you can collect payment via Tap
 
 ## Screenshots
  
-![Knet Configuration Page screenshot 01](https://content.screencast.com/users/m.khan3005/folders/Capture/media/e9cd1289-8393-483c-a24b-42ff84778f47/LWR_Recording.png)
-![Tap Configuration Page screenshot 02](https://content.screencast.com/users/m.khan3005/folders/Capture/media/295eeae9-4b00-4e12-ba9d-3833f4476f2d/LWR_Recording.png)
 
-
-
+![tap_payments_configurations](https://github.com/Tap-Payments/magento-plugin/assets/36191420/35cf3bc1-6283-4680-bc30-47c9e5c0673e)
