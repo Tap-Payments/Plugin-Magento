@@ -1,6 +1,6 @@
 # magento-2 plugin
 
-# Supported magento version 2.3.X, 2.4.X 
+## Supported magento version 2.3.X, 2.4.X 
 The plugin has been tested with most versions of Magento at every iteration. We recommend using the latest version of Magento, but if that is not possible for some reason, test the plugin with your Magento version and it would probably function properly.
 
 
