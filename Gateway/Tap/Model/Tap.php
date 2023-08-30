@@ -16,8 +16,6 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_minAmount = null;
     protected $_maxAmount = null;
     protected $_supportedCurrencyCodes = array('INR');
-    protected $_formBlockType = 'Gateway\Tap\Block\Form\Tap';
-    protected $_infoBlockType = 'Gateway\Tap\Block\Info\Tap';
     protected $urlBuilder;
 
     public function __construct(

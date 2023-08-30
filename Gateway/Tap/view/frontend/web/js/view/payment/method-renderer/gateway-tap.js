@@ -15,6 +15,13 @@ define(
 	],
 	function (ko, $, Component,  placeOrderAction, selectPaymentMethodAction, customer, checkoutData, additionalValidators, customerData, qoute, totals, urlBuilder) {
 		'use strict';
+		$(document).on('change', 'input[name="payment_type"]', function() {
+			let selected_payment_method = $(this).val();
+        		if (selected_payment_method == 'CC')
+		        {
+		            $('button.checkout').attr('disabled', 'disabled');
+		        }
+	    });
 	
 		console.log(window.checkoutConfig);
 		var active_pk = window.checkoutConfig.payment.tap.active_pk;
@@ -250,6 +257,12 @@ define(
 								card.mount('#element-container');
 								//card change event listener
 								card.addEventListener('change', function(event) {
+									if (event.status=='invalid' || event.status===undefined){
+										$('button.checkout').attr('disabled', 'disabled');
+									} 
+									if (event.status=='success') {
+										$('button.checkout').removeAttr('disabled');
+									}
   									if (event.BIN) {
     									console.log(event.BIN)
   									}
@@ -498,7 +511,13 @@ define(
 					
 
 								if ( ui_mode == 'token'  && payment_type_mode == 'CC') { 
-									$.mage.redirect(window.checkoutConfig.payment.tap.redirectUrl+'?'+'token='+token);
+									var checkList = setInterval(function () {
+                    							console.log("IN TIMEOUT : " + token);
+		                    					if (token) {
+		                        					$.mage.redirect(window.checkoutConfig.payment.tap.redirectUrl + '?' + 'token=' + token);
+		                        					clearInterval(checkList);
+		                    					}
+                						}, 1000);
 								}
 						}
 					)
