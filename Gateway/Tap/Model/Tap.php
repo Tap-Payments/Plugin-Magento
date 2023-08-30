@@ -106,9 +106,7 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
 
         if ($err) {
             echo "cURL Error #:" . $err;
-        } else {
-            echo $response;
-        }
+        } 
         
             $payment
             ->setTransactionId($transactionId . '-' . \Magento\Sales\Model\Order\Payment\Transaction::TYPE_REFUND)
