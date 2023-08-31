@@ -27,4 +27,4 @@ Now you can collect payment via Tap
 
 
 
-Release : Tokenization fix added plus refund fix.
+Release note  : Tokenization fix added plus refund fix. (Updated 8/31/2023)
