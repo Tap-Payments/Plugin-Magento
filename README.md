@@ -24,3 +24,7 @@ Now you can collect payment via Tap
  
 
 ![tap_payments_configurations](https://github.com/Tap-Payments/magento-plugin/assets/36191420/35cf3bc1-6283-4680-bc30-47c9e5c0673e)
+
+
+
+Release : Tokenization fix added plus refund fix.
