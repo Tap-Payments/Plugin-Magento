@@ -1,7 +1,9 @@
 <?php
 
 namespace Gateway\Tap\Observer;
+
 use Magento\Framework\Event\ObserverInterface;
+
 class SendMailOnOrderSuccess implements ObserverInterface
 {
     /**
@@ -50,8 +52,10 @@ class SendMailOnOrderSuccess implements ObserverInterface
         if($payment_method == 'tap')
         {
             $this->checkoutSession->setForceOrderMailSentOnSuccess(true);
+
             $order = $this->orderModel->create()->load($orderIds[0]);
             $this->orderSender->send($order, true);
+            //$order->setIsCustomerNotified(true);
         }
     }
 }

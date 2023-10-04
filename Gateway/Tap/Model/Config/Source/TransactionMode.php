@@ -1,5 +1,6 @@
 <?php
 namespace Gateway\Tap\Model\Config\Source;
+
 class TransactionMode implements \Magento\Framework\Option\ArrayInterface
 {
  	public function toOptionArray()

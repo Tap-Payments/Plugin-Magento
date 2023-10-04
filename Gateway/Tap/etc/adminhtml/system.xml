@@ -25,6 +25,11 @@
                     <source_model>Gateway\Tap\Model\Config\Source\UImode</source_model>
                     <config_path>payment/tap/ui_mode</config_path>
                 </field>
+                <field id="language" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Language</label>        
+                    <source_model>Gateway\Tap\Model\Config\Source\Language</source_model>
+                    <config_path>payment/tap/language</config_path>
+                </field>
                 <field id="test_public_key" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Test Public Key</label>
                     <comment>Provided By Tap</comment>
@@ -53,7 +58,7 @@
                     <label>Staging Mode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/tap/debug</config_path>
-                </field>   
+                </field> 
                 <field id="knet_checkout" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enable Knet at Checkout</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

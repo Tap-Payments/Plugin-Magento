@@ -38,6 +38,7 @@ define(
 		var response_url = window.checkoutConfig.payment.tap.responseUrl;
 		var config_trans_mode = window.checkoutConfig.payment.tap.transaction_mode;
 		var knet = window.checkoutConfig.payment.tap.knet;
+		var language = window.checkoutConfig.payment.tap.tap_language;
 		var guest_customerdata = customerData.get('checkout-data')();
 
 			var response_url = ''; 
@@ -48,6 +49,7 @@ define(
             var phone = '';
             var currency_code = '' ;
             var amount = '';
+
 		var middlename = '';
 		var country_code = '';
 		var cart_items = window.checkoutConfig.quoteItemData;
@@ -67,13 +69,16 @@ define(
 			})
 
 		});
+		//var config_trans_mode = 'capture';
 		var total = qoute.getTotals()();
-		console.log()
+		console.log();
 		var total = qoute.getTotals()();
 		console.log(total);
 		var qoute_total_amount = total.grand_total;
 		var orderId = window.checkoutConfig.payment.tap.orderId;
 		var amount = window.checkoutConfig.totalsData.base_grand_total;
+
+		
 		var currency_code = window.checkoutConfig.quoteData.quote_currency_code;
 		var total_amount = qoute_total_amount;
 
@@ -93,6 +98,7 @@ define(
                         if (response) {
                             var deferred = jQuery.Deferred();
                             getTotalsAction([], deferred);
+                            // var deferred = $.Deferred();
                              fullScreenLoader.stopLoader();
                             getPaymentInformationAction(deferred);
                             jQuery.when(deferred).done(function () {
@@ -131,6 +137,7 @@ define(
 							if (event) {
 								event.preventDefault();
 							}
+						
 							var self = this,
 							placeOrder,
 							emailValidationResult = customer.isLoggedIn(),
@@ -239,17 +246,31 @@ define(
     									color: 'red'
   									}
 								};
-
+							
+                            if (language  == 'en') {
 							var labels = {
     								cardNumber:"Card Number",
     								expirationDate:"MM/YY",
     								cvv:"CVV",
     								cardHolder:"Card Holder Name"
   								};
+  								var direction = 'ltr';
+                            }
+                            else{
+                                	var labels = {
+    								cardNumber:"رقم البطاقة",
+    								expirationDate:"شهر/سنة",
+    								cvv:"التحقق من البطاقة",
+    								cardHolder:"الاسم موجود على البطاقة"
+  								};
+  								var direction = 'rtl';
+                                
+                            }
+								//payment options
 							var paymentOptions = {
   									currencyCode:"all",
   									labels : labels,
-  									TextDirection:'ltr'
+  									TextDirection:direction
 								}
 								//create element, pass style and payment options
 							var card = elements.create('card', {style: style},paymentOptions);
@@ -296,6 +317,7 @@ define(
       									var tokenElement = document.getElementById('token');
       									tokenElement.textContent = result.id;
       									console.log(result.id);
+    								//return result.id;
     								}
   								});
 							});
@@ -328,8 +350,6 @@ define(
                         * @param {Object} response
                         */
                         success: function (response) {
-
-
                         AjaxDataResponse = response;
 
                     }
@@ -415,7 +435,7 @@ define(
 								goSell.config({
 			  						gateway:{
 										publicKey:active_pk,
-										language:"en",
+										language:language,
 										contactInfo:true,
 										supportedCurrencies:"all",
 										supportedPaymentMethods: "all",
@@ -484,12 +504,15 @@ define(
 							    console.log(ui_mode);
 								if (ui_mode == 'redirect' && payment_type_mode == 'CC') {
 								    $.mage.redirect(window.checkoutConfig.payment.tap.redirectUrl+'?'+'redirect=redirect');
+								    //console.log('inredirect');
+									//goSell.openPaymentPage();	
 								}
 								else if (ui_mode == 'popup' && payment_type_mode == 'CC') {
 								    console.log('opppppp');
 									goSell.openLightBox();
 								}
 					            if ( ui_mode == 'token'){
+					            	//;
 								var config_trans_mode = '';
 								console.log(ui_mode);
 								var token = document.getElementById("token").innerHTML;

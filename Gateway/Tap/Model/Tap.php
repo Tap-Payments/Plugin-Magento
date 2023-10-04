@@ -1,8 +1,10 @@
 <?php
 
 namespace Gateway\Tap\Model;
+
 use Gateway\Tap\Helper\Data as DataHelper;
 use Gateway\Tap\Controller\Standard;
+
 class Tap extends \Magento\Payment\Model\Method\AbstractMethod
 {
     const CODE = 'tap';
@@ -17,6 +19,7 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_maxAmount = null;
     protected $_supportedCurrencyCodes = array('INR');
     protected $urlBuilder;
+
 
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -33,6 +36,7 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         \Magento\Sales\Model\Order\Invoice $invoice,
         \Magento\Sales\Model\Service\CreditmemoService $creditmemoService,
         \Magento\Framework\App\Request\Http $request
+      
 
     ) {
         $this->helper = $helper;
@@ -56,6 +60,8 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         $this->request = $request;
        
     }
+
+
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount){
         $mode = $this->getConfigData('debug');
         if ($mode) {
@@ -97,6 +103,7 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
                                 ),
         ));
 
+
         $response = curl_exec($curl);
         $obj = json_decode($response);
         $transactionId = $obj->id;
@@ -108,6 +115,7 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
             echo "cURL Error #:" . $err;
         } 
         
+    
             $payment
             ->setTransactionId($transactionId . '-' . \Magento\Sales\Model\Order\Payment\Transaction::TYPE_REFUND)
             ->setParentTransactionId($transactionId)
@@ -115,6 +123,7 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
             ->setShouldCloseParentTransaction(1);
             return $this;
     }
+
 
     public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null)
     {
@@ -128,18 +137,26 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         return parent::isAvailable($quote);
     }
 
+
+
     public function redirectMode($order,$source_id){
         $mode = $this->getConfigData('debug');
         if ($mode) {
             $active_sk = $this->getConfigData('test_secret_key');
+            $active_pk = $this->getConfigData('test_public_key');
         }
         else {
             $active_sk = $this->getConfigData('live_secret_key');
+            $active_pk = $this->getConfigData('live_public_key');
         }
         $ui_mode = $this->getConfigData('ui_mode');
         $transaction_mode   =   $this->getConfigData('transaction_mode');
         $amount             =   $order->getGrandTotal();
+        
         $currencyCode       =   $order->getOrderCurrencyCode();  
+        $ref = '';
+        
+
         $orderid            =   $order->getEntityId();
         $orderIncrementId   =   $order->getIncrementId();
         $CstFName           =   $order->getBillingAddress()->getFirstName();
@@ -149,6 +166,10 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         $post_url           =   $this->getConfigData('post_url');
         $redirectUrl        =   $this->urlBuilder->getUrl('tap/Standard/Response');
         $trans_object = [];
+        $ref = '';
+        $Hash = 'x_publickey'.$active_pk.'x_amount'.$amount.'x_currency'.$currencyCode.'x_transaction'.$ref.'x_post'.$post_url;
+        $hashstring = hash_hmac('sha256', $Hash, $active_sk);
+        //echo $hashstring;exit;
         
         if ( $transaction_mode == 'authorize') {
             $request_url =  "https://api.tap.company/v2/authorize"; 
@@ -166,6 +187,7 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
         $trans_object["metadata"]["udf2"]          = 'test';
         $trans_object["reference"]["transaction"]  = $orderIncrementId;
         $trans_object["reference"]["order"]        = $orderIncrementId;
+        //$trans_object["hashstring"]                = $hashstring;
         $trans_object["receipt"]["email"]          = false;
         $trans_object["receipt"]["sms"]            = true;
         $trans_object["customer"]["first_name"]    = $CstFName;
@@ -193,12 +215,15 @@ class Tap extends \Magento\Payment\Model\Method\AbstractMethod
                     CURLOPT_POSTFIELDS => json_encode($trans_object),
                     CURLOPT_HTTPHEADER => array(
                         "authorization: Bearer ".$active_sk,
+                        // "hashstring : $hashstring",
                         "content-type: application/json"
                     ),
                 )
             );
+
             $response = curl_exec($curl);
             $response = json_decode($response);
+
             $err = curl_error($curl);
             curl_close($curl);
             if ($err) {

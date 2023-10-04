@@ -35,6 +35,7 @@ abstract class Tap extends \Magento\Framework\App\Action\Action
 	
 	protected $_orderHistoryFactory;
 
+    // protected $paymentTokenFactory;
 
 
     /**
@@ -59,6 +60,7 @@ abstract class Tap extends \Magento\Framework\App\Action\Action
          \Magento\Framework\DB\Transaction $transaction,
          \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
          \Magento\Framework\Controller\Result\JsonFactory $jsonResultFactory
+        // \PaymentTokenFactoryInterface $paymentTokenFactory
 
     ) {
         $this->_customerSession = $customerSession;

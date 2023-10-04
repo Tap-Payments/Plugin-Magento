@@ -7,14 +7,22 @@ use Magento\Framework\App\Action\Context;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Api\Data\CreditmemoInterface;
+// use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Customer\Model\Session;
 
+  
 class Response extends \Gateway\Tap\Controller\Tap
 {
+	 // public function __construct(\Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder){
+	 // 	$this->transactionBuilder = $transactionBuilder;
+
+	 // }
+
 
 	public function createTransaction($order_info , $paymentData = array() )
 	{
         try {
+            //get payment object from order object
             $payment = $order_info->getPayment();
             $payment->setLastTransId($paymentData);
             $payment->setTransactionId($paymentData);
@@ -26,9 +34,11 @@ class Response extends \Gateway\Tap\Controller\Tap
             );
  
             $message = __('The authorized amount is %1.', $formatedPrice);
+            //get the object of builder class
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 			$transactionBuilder = $objectManager->get('\Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface');
             $trans = $transactionBuilder;
+
             $transaction = $trans->setPayment($payment)
             ->setOrder($order_info)
             ->setTransactionId($paymentData)
@@ -36,7 +46,9 @@ class Response extends \Gateway\Tap\Controller\Tap
                 [\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS => (array) $paymentData]
             )
             ->setFailSafe(true)
+            //build method creates the transaction and returns the object
             ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE);
+ 
             $payment->addTransactionCommentsToOrder(
                 $transaction,
                 $message
@@ -45,7 +57,9 @@ class Response extends \Gateway\Tap\Controller\Tap
             $payment->save();
             $order_info->save();
  
+            //return  $transaction->save()->getTransactionId();
         } catch (Exception $e) {
+            //log errors here
         }
 	}
 
@@ -54,6 +68,7 @@ class Response extends \Gateway\Tap\Controller\Tap
 
 	public function execute()
 	{
+	  //  echo 'here';exit;
 		$debug_mode =  $this->getTapHelper()->getConfiguration('payment/tap/debug');
 		if ($debug_mode == 1)
 			$live_secret_key = $this->getTapHelper()->getConfiguration('payment/tap/test_secret_key');
@@ -64,6 +79,8 @@ class Response extends \Gateway\Tap\Controller\Tap
 		$resultRedirect = $this->resultRedirectFactory->create();
 		$ref = $_REQUEST['tap_id'];
 		$transaction_mode = substr($ref, 0, 4);
+	   //echo $ref;exit;
+		//var_dump($transaction_mode);exit;
 		if ($transaction_mode == 'auth') {
 			$curl_url = 'https://api.tap.company/v2/authorize/';
 		}
@@ -74,6 +91,7 @@ class Response extends \Gateway\Tap\Controller\Tap
 		$successFlag= 	false;
 
 			$curl = curl_init();
+
 
 			curl_setopt_array($curl, array(
   						CURLOPT_URL => $curl_url.$ref,
@@ -91,28 +109,49 @@ class Response extends \Gateway\Tap\Controller\Tap
 			);
 
 			$response = curl_exec($curl);
+			$header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+			$header = substr($response, 0, $header_size);
+			$header = substr($response, 0, $header_size);
+			//$headers = substr($response, 0, $header_size);
+			//var_dump($header);exit;
+		//	echo $header;exit;
 			$err = curl_error($curl);
 			curl_close($curl);
 			if ($err) {
   				echo "cURL Error #:" . $err;
 			} 
 			else {
-				$response = json_decode($response);
-				$payment_type = $response->source->payment_type;
+			    $response = json_decode($response);
 				$charge_status = $response->status;
-				if ($payment_type == 'CREDIT') {
-  					$last_four = $response->card->last_four;
-  					$payment_type = 'CREDIT CARD';
-  				}
+				//echo $charge_status;exit;
+				if ($charge_status == 'CAPTURED' || $charge_status == 'INITIATED') {
+				    $payment_type = $response->source->payment_type;
+				    //$charge_status = $response->status;
+				    if ($payment_type == 'CREDIT') {
+  					    $last_four = $response->card->last_four;
+  					    $payment_type = 'CREDIT CARD';
+  				    }
+			    }
 			}
+			
 			$order_idd = $response->reference->order;
+
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $incrId = $order_idd;
         $collection = $objectManager->create('Magento\Sales\Model\Order');
         $order_info = $collection->loadByIncrementId($incrId);
+        // $orderId = $collection->getId();
+        // echo $orderId;exit;
+        //echo $orderInfo->getState();exit;
+        //$orderId = $orderInfo->getId();
+        //$order_info = $objectManager->create('\Magento\Sales\Model\OrderRepository')->get($order_idd);
         $payment = $order_info->getPayment();
-			if ($charge_status == 'DECLINED'  ) {
+			
+
+
+			if ($charge_status == 'DECLINED' || $charge_status == 'CANCELLED') {
 				$errorMsg = $response->response->message;
+
 				$returnUrl = $this->getTapHelper()->getUrl('checkout/cart');
             	$order_info->setIsCustomerNotified(true);
             	$order_info->addStatusHistoryComment($errorMsg);
@@ -125,40 +164,59 @@ class Response extends \Gateway\Tap\Controller\Tap
 				$this->messageManager->addError(__("Transaction Failed"));
 				return $resultRedirect->setUrl($returnUrl);
 			}
+		
+  			
 
 		if ($_REQUEST['tap_id'] && $transaction_mode !== 'auth' && $charge_status == 'CAPTURED' || $charge_status == 'INITIATED')
 		{
 			
 			$reffer = $_REQUEST['tap_id'];
 			$tid = '';
+			//$transaction_id = $this->createTransaction($order ,$reffer );
 				$orderState = \Magento\Sales\Model\Order::STATE_PROCESSING;
 				$orderStatus = \Magento\Sales\Model\Order::STATE_PROCESSING;
 				$order_info->setState($orderState)
                             ->setStatus($orderStatus)
                                 ->addStatusHistoryComment("Tap Transaction Successful")
-                                ->setIsCustomerNotified(true);                
+                                ->setIsCustomerNotified(true);
+                
+				
 			    $invoice_count = $order_info->getInvoiceCollection()->count();
+			    //echo $invoice_count;exit;
 			    if ($invoice_count == 0) {
 				    $objectManager2 = \Magento\Framework\App\ObjectManager::getInstance();
 				    $invioce = $objectManager2->get('\Magento\Sales\Model\Service\InvoiceService')->prepareInvoice($order_info);
 				    $invioce->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_ONLINE);
 				    $invioce->register();
+				
 				    $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_AUTH, null, true, ""
     			    );
             	    $invioce->setTransactionId($reffer);
             	    $invioce->save();
+
+
              	    $payment->setTransactionId($reffer);
     			    $payment->setParentTransactionId($payment->getTransactionId());
     			    $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_AUTH, null, true, ""
     			    );
     			    $transaction->setIsClosed(true);
+
     			    $comment .=  '<br/><b>Tap payment successful</b><br/><br/>Tap ID - '.$_REQUEST['tap_id'].'<br/><br/>Order ID - '.$order_idd.'<br/><br/>Payment Type - Credit Card<br/><br/>Payment ID - '.$_REQUEST['tap_id'];
+
+                    // $payment->setTransactionId($ref);
+    			    // $payment->setParentTransactionId($payment->getTransactionId());
+    			    // $transaction = $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_AUTH, null, true, ""
+    			    // );
+    			    //$transaction->setIsClosed(true);
     			    $this->messageManager->addSuccess(__("Transaction Successful"));
+			
 			        $returnUrl = $this->getTapHelper()->getUrl('checkout/onepage/success');
 			    }
 		}
 		else if ($_REQUEST['tap_id'] && $transaction_mode == 'auth' ) 
 		{
+			//var_dump($order_idd);exit;
+			//var_dump($order_idd);exit;
 			$comment .=  '<br/><b>Tap payment successful</b><br/><br/>Tap ID - '.$_REQUEST['tap_id'].'<br/><br/>Order ID - '.$order_idd.'<br/><br/>Payment Type - Credit Card<br/><br/>Payment ID - '.$_REQUEST['tap_id'];
 			$order_info->setStatus($order_info::STATE_PAYMENT_REVIEW);
 			$transaction_id = $this->createTransaction($order_info, $_REQUEST['tap_id']);
@@ -173,8 +231,10 @@ class Response extends \Gateway\Tap\Controller\Tap
 		{
 			$errorMsg = 'It seems some issue in card authentication. Transaction Failed.';
 			$returnUrl = $this->getTapHelper()->getUrl('checkout/cart');
+			//aecho $errorMsg;exit;
 			$order_info->setStatus($order_info::STATE_PENDING_PAYMENT);
 			$qoute = $this->getQuote();
+			
 			$this->getCheckoutSession()->restoreQuote($qoute);
 			$qoute->setIsActive(true);
 			$comment = $errorMsg;
